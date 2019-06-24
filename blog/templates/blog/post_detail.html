@@ -1,5 +1,5 @@
 {% extends "blog/base.html"%}
-
+{% load crispy_forms_tags %}
 {% block content %}
 
 <article class="media content-section">
@@ -19,6 +19,27 @@
             <p class="article-content">{{ object.content }}</p>
         </div>
 </article>
+            {% for comment in posts.comment_lists %}
+            <div class="comment">
+            <p class="info">
+            Comment {{ forloop.counter }} by {{ comment.name }}
+            {{ comment.created }}
+            </p>
+            {{ comment.body|linebreaks }}
+            </div>
+            {% empty %}
+            <p>There are no comments yet.</p>
+            {% endfor %}
 
+            {% if new_comment %}
+            <h2>Your comment has been added.</h2>
+            {% else %}
+            <h2>Add a new comment</h2>
+            <form action="." method="post">
+            {{ form|crispy }}
+            {% csrf_token %}
+            <p><input type="submit" value="Add comment"></p>
+            </form>
+            {% endif %}
 
 {% endblock content%}
